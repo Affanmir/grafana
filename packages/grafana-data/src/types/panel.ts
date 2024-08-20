@@ -8,9 +8,9 @@ import { OptionsEditorItem } from './OptionsUIRegistryBuilder';
 import { ScopedVars } from './ScopedVars';
 import { AlertStateInfo } from './alerts';
 import { PanelModel } from './dashboard';
-import { LoadingState, PreferredVisualisationType } from './data';
+import { Correlation, LoadingState, PreferredVisualisationType } from './data';
 import { DataFrame, FieldType } from './dataFrame';
-import { DataQueryError, DataQueryRequest, DataQueryTimings } from './datasource';
+import { DataQueryError, DataQueryRequest, DataQueryTimings, DataSourceInstanceSettings } from './datasource';
 import { FieldConfigSource } from './fieldOverrides';
 import { IconName } from './icon';
 import { OptionEditorConfig } from './options';
@@ -363,4 +363,9 @@ export class VisualizationSuggestionsListAppender<TOptions, TFieldConfig> {
   append(overrides: Partial<VisualizationSuggestion<TOptions, TFieldConfig>>) {
     this.list.push(defaultsDeep(overrides, this.defaults));
   }
+}
+
+export interface CorrelationData extends Omit<Correlation, 'sourceUID' | 'targetUID'> {
+  source: DataSourceInstanceSettings;
+  target: DataSourceInstanceSettings;
 }

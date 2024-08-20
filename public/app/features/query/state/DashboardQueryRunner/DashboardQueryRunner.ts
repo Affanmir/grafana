@@ -1,4 +1,4 @@
-import { merge, Observable, ReplaySubject, Subject, Subscription, timer, Unsubscribable } from 'rxjs';
+import { forkJoin, from, merge, Observable, ReplaySubject, Subject, Subscription, timer, Unsubscribable } from 'rxjs';
 import { finalize, map, mapTo, mergeAll, reduce, share, takeUntil } from 'rxjs/operators';
 
 import { AnnotationQuery } from '@grafana/data';
@@ -55,12 +55,16 @@ class DashboardQueryRunnerImpl implements DashboardQueryRunner {
   }
 
   getResult(panelId?: number): Observable<DashboardQueryRunnerResult> {
-    return this.results.asObservable().pipe(
+    return forkJoin({
+      dashboardResults: this.results.asObservable(),
+      correlations: from(getCorrelationsForDashboard(this.dashboard.panels)),
+    }).pipe(
       map((result) => {
-        const annotations = getAnnotationsByPanelId(result.annotations, panelId);
-        const correlations = getCorrelationsForDashboard(this.dashboard.panels);
-        const alertState = result.alertStates.find((res) => Boolean(panelId) && res.panelId === panelId);
-        return { annotations: dedupAnnotations(annotations), alertState };
+        const annotations = getAnnotationsByPanelId(result.dashboardResults.annotations, panelId);
+        const alertState = result.dashboardResults.alertStates.find(
+          (res) => Boolean(panelId) && res.panelId === panelId
+        );
+        return { annotations: dedupAnnotations(annotations), alertState, correlations: result.correlations };
       })
     );
   }

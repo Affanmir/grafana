@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 
 import { AnnotationEvent, AnnotationQuery, DataFrame, DataFrameView, DataSourceApi } from '@grafana/data';
 import { config, toDataQueryError } from '@grafana/runtime';
-import { DataSourceRef, Panel } from '@grafana/schema/dist/esm/index.gen';
+import { DataSourceRef } from '@grafana/schema/dist/esm/index.gen';
 import { CorrelationData } from 'app/features/correlations/useCorrelations';
 import { getCorrelationsBySourceUIDs } from 'app/features/correlations/utils';
 import { PanelModel } from 'app/features/dashboard/state';

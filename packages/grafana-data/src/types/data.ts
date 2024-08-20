@@ -234,7 +234,6 @@ export interface DataConfigSource {
   getDataSupport: () => PanelPluginDataSupport;
   getTransformations: () => DataTransformerConfig[] | undefined;
   getFieldOverrideOptions: () => ApplyFieldOverrideOptions | undefined;
-  getCorrelations: () => Correlation[] | undefined;
   snapshotData?: DataFrameDTO[];
 }
 

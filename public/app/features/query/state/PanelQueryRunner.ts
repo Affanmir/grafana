@@ -115,7 +115,6 @@ export class PanelQueryRunner {
       mergeMap((data: PanelData) => {
         let fieldConfig = this.dataConfigSource.getFieldOverrideOptions();
         let transformations = this.dataConfigSource.getTransformations();
-        let correlations = this.dataConfigSource.getCorrelations();
 
         if (
           data.series === lastRawFrames &&
