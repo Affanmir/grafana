@@ -73,6 +73,7 @@ type Dialect interface {
 	IsUniqueConstraintViolation(err error) bool
 	ErrorMessage(err error) string
 	IsDeadlock(err error) bool
+	IsReserved(str string) bool
 	Lock(LockCfg) error
 	Unlock(LockCfg) error
 
@@ -154,6 +155,10 @@ func (b *BaseDialect) EqStr() string {
 	return "="
 }
 
+func (b *BaseDialect) IsReserved(_ string) bool {
+	return false
+}
+
 func (b *BaseDialect) Default(col *Column) string {
 	if col.Type == DB_Bool {
 		// Ensure that all dialects support the same literals in the same way.
@@ -163,7 +168,12 @@ func (b *BaseDialect) Default(col *Column) string {
 		}
 		return b.dialect.BooleanStr(bl)
 	}
-	return b.dialect.Quote(col.Default)
+
+	if b.dialect.IsReserved(col.Default) {
+		return b.dialect.Quote(col.Default)
+	} else {
+		return col.Default
+	}
 }
 
 func (b *BaseDialect) DateTimeFunc(value string) string {
